@@ -17,4 +17,6 @@ https://coreybraun.com/posts/google-assistant-home-assistant/
 I needed the same functionality, but instead of using OPNsense, I needed the addresses to be added as UFW rules.
 Use of the UFW module requires running this script as root.
 
+The script will create UFW rules with the comment "Managed by googleips.py", this makes sure that the next run of the script looks at the previously created rules and removes any IP blocks that have been removed from Google's list.
+
 // sbjzn
