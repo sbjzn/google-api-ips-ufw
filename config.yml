@@ -9,9 +9,9 @@
 ## Variables for updating OPNsense alias; If 'update_fw_alias' is enabled 'fw_url', 'fw_api_key', and 'fw_api_secret' must be set.
 ## When creating an API key it is recommended to only give the key's user the permission 'Firewall: Alias: Edit' to minimize the key's access in the event that it is compromised.
 #update_fw_alias: yes ## Whether to create/update an OPNsense alias with the IP list
-fw_url: ## URL of your OPNsense firewall; A trailing slash is required
-fw_api_key: ## Your OPNsense API Key
-fw_api_secret: ## Your OPNsense API Secret
+#fw_url: ## URL of your OPNsense firewall; A trailing slash is required
+#fw_api_key: ## Your OPNsense API Key
+#fw_api_secret: ## Your OPNsense API Secret
 #fw_check_cert: yes ## Verify authenticity of SSL cert on OPNsense; Must be disabled if using an expired/self signed cert
 #alias_name: Google_API_Alias ## The name of the alias to create/update in OPNsense
 
