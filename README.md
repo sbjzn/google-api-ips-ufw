@@ -13,6 +13,7 @@ If using the script to update an OPNsense alias it is recommended to create the 
 See this related blog post for details on how I use this script to connect [Home Assistant](https://www.home-assistant.io/) to Google Assistant:<br>
 https://coreybraun.com/posts/google-assistant-home-assistant/
 
-## UFW Support - sbjzn
+## UFW Support
 I needed the same functionality, but instead of using OPNsense, I needed the addresses to be added as UFW rules.
 Use of the UFW module requires running this script as root.
+// sbjzn
