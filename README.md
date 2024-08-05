@@ -16,4 +16,5 @@ https://coreybraun.com/posts/google-assistant-home-assistant/
 ## UFW Support
 I needed the same functionality, but instead of using OPNsense, I needed the addresses to be added as UFW rules.
 Use of the UFW module requires running this script as root.
+
 // sbjzn
