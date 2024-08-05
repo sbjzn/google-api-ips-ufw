@@ -1,4 +1,5 @@
-# google-api-ips
+# google-api-ips-ufw
+
 Python script for creating/updating an [OPNsense](https://opnsense.org/) alias with the IP networks used by Google for its APIs and services.
 This is done by removing the set of IPs handed out to Google Cloud customers from the set of all publicly accessible Google IPs.<br>
 See https://support.google.com/a/answer/10026322 for more information.
@@ -11,3 +12,7 @@ If using the script to update an OPNsense alias it is recommended to create the 
 
 See this related blog post for details on how I use this script to connect [Home Assistant](https://www.home-assistant.io/) to Google Assistant:<br>
 https://coreybraun.com/posts/google-assistant-home-assistant/
+
+## UFW Support - sbjzn
+I needed the same functionality, but instead of using OPNsense, I needed the addresses to be added as UFW rules.
+Use of the UFW module requires running this script as root.
