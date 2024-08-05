@@ -4,10 +4,18 @@
 ## See https://support.google.com/a/answer/10026322 for info on the Google API IP ranges this script collects.
 
 import sys
+import ufw.backend
+import ufw.common
+import ufw.frontend
+import ufw.parser
+import ufw.util
 import yaml
 import logging
 import requests
-from netaddr import IPNetwork, IPSet
+import gettext
+import ufw
+import ipaddress
+from netaddr import IPSet
 
 def main():
     alias_ips = get_google_ips()
@@ -17,7 +25,9 @@ def main():
         logging.info(f"Wrote API IPs to file '{config['ips_file_name']}'")
     if config['update_fw_alias']:
         update_alias(alias_ips)
-    if not (config['create_ips_file'] or config['update_fw_alias']):
+    if config['update_ufw']:
+        update_ufw(alias_ips)
+    if not (config['create_ips_file'] or config['update_fw_alias'] or config["update_ufw"]):
         for i in alias_ips:
             print(i)
 
@@ -29,12 +39,14 @@ def get_config(config_file_name='config'):
         'google_cloud_ips_url': 'https://www.gstatic.com/ipranges/cloud.json',
         'create_ips_file': False,
         'ips_file_name': 'google-api-ips.txt',
-        'update_fw_alias': True,
+        'update_fw_alias': False,
         'fw_check_cert': True,
         'fw_url': None,
         'fw_api_key': None,
         'fw_api_secret': None,
-        'alias_name': 'Google_API_Alias'
+        'alias_name': 'Google_API_Alias',
+        'update_ufw': False,
+        'ufw_dst_port': "443"
     }
     config_path = sys.path[0]
     if len(config_path) > 0:
@@ -112,6 +124,43 @@ def update_alias(ip_list):
     logging.debug("Applying alias changes.")
     alias_apply = fw_api_call('POST', 'api/firewall/alias/reconfigure')
     logging.info(f"Alias '{config['alias_name']}' {alias_action}d with {len(ip_list)} CIDR blocks.")
+
+def update_ufw(ip_list):
+    program_name = ufw.common.programName
+    gettext.install(program_name)
+    frontend = ufw.frontend.UFWFrontend(dryrun=False)
+    backend = frontend.backend
+    rules = backend.get_rules()
+    old_rules = []
+    for rule in rules:
+        # Remove old IP blocks
+        if rule.src not in ip_list and rule.comment == "Managed by googleips.py".encode("utf-8").hex():
+            logging.info(f"Removing rule for src {rule.src}")
+            frontend.delete_rule(rules.index(rule)+1, force=True)
+            continue
+        # Get current rules
+        if rule.comment == "Managed by googleips.py".encode("utf-8").hex():
+            old_rules.append(rule)
+    
+    for block in ip_list:
+        if ipaddress.ip_network(block).version == 4:
+            version = "v4"
+        elif ipaddress.ip_network(block).version == 6:
+            version = "v6"
+        else:
+            raise ValueError(f"Invalid network address {block}")
+        
+        new_rule = ufw.backend.UFWRule(action="allow", protocol="tcp", dport=config["ufw_dst_port"], src=block, comment="Managed by googleips.py".encode("utf-8").hex())
+        for old_rule in old_rules:
+            if old_rule == new_rule:
+                break
+        else:
+            logging.info(f"Adding rule for src {block}")
+            frontend.set_rule(new_rule, ip_version=version)
+
+
+    
+    
 
 def fw_api_call(http_method, api_endpoint, json_payload=None):
     try:

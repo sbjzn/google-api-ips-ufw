@@ -22,3 +22,9 @@ fw_api_secret: ## Your OPNsense API Secret
 ## IP list file Variables
 #create_ips_file: no ## Whether to write a file containing the newline-delimited IP list
 #ips_file_name: google-api-ips.txt ## The file to write the list of IPs to
+
+## UFW Variables
+## Requires running this script as root to function
+#update_ufw: yes ## Add rules ín UFW for Google's IP ranges. default: no
+#ufw_dst_port: "8443" ## Destination port for the UFW rules. default: "443"
+
