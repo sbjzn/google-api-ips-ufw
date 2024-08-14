@@ -19,4 +19,6 @@ Use of the UFW module requires running this script as root.
 
 The script will create UFW rules with the comment "Managed by googleips.py", this makes sure that the next run of the script looks at the previously created rules and removes any IP blocks that have been removed from Google's list.
 
+I wrote a blog post about my setup utilizing this script here: [https://sbjzn.com/blog/secure-home-assistant-google-assistant/](https://sbjzn.com/blog/secure-home-assistant-google-assistant/)
+
 // sbjzn
